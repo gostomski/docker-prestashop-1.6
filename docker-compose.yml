@@ -1,0 +1,33 @@
+version: '2'
+services:
+  mariadb:
+    image: 'docker.io/bitnami/mariadb:10.1-debian-10'
+    #image: 'docker.io/bitnami/mariadb:10.3-debian-10'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_USER=bn_prestashop
+      - MARIADB_DATABASE=bitnami_prestashop
+    volumes:
+      - 'mariadb_data:/bitnami/mariadb'
+  prestashop:
+    #image: prestashop/prestashop:1.6-5.6-apache
+     build: 
+       dockerfile: docker/prestashop/Dockerfile 
+       context: .
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      - PS_DEMO_MODE=false
+      - DB_SERVER=mariadb
+      - DB_USER=presta_presta
+      - DB_NAME=presta_presta
+      - DB_PASSWD=xxxxxxxx
+      - PS_INSTALL_AUTO=false
+      - PS_LANGUAGE=pl
+      - PS_COUNTRY=pl
+    depends_on:
+      - mariadb
+volumes:
+  mariadb_data:
+    driver: local
