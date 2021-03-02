@@ -5,29 +5,36 @@ services:
     #image: 'docker.io/bitnami/mariadb:10.3-debian-10'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-      - MARIADB_USER=bn_prestashop
-      - MARIADB_DATABASE=bitnami_prestashop
+      - MARIADB_USER=presta_presta
+      - MARIADB_DATABASE=presta_presta
+      - MARIADB_PASSWORD=xxxxxxxx
     volumes:
-      - 'mariadb_data:/bitnami/mariadb'
+      - 'mariadb_data2:/bitnami/mariadb'
   prestashop:
-    #image: prestashop/prestashop:1.6-5.6-apache
-     build: 
+    build: 
        dockerfile: docker/prestashop/Dockerfile 
        context: .
     ports:
       - '80:80'
       - '443:443'
     environment:
-      - PS_DEMO_MODE=false
+      #- PS_UPDATE_SETTING=1
+      - PS_DEMO_MODE=0
       - DB_SERVER=mariadb
       - DB_USER=presta_presta
       - DB_NAME=presta_presta
       - DB_PASSWD=xxxxxxxx
-      - PS_INSTALL_AUTO=false
+      - PS_INSTALL_AUTO=0
       - PS_LANGUAGE=pl
       - PS_COUNTRY=pl
+    volumes:
+      - ./eldor24.pl/config/defines.inc.php:/var/www/html/config/defines.inc.php
+      - ./eldor24.pl/config/settings.inc.php:/var/www/html/config/settings.inc.php
+      - ./eldor24.pl/modules:/var/www/html/modules
+      - ./eldor24.pl/override:/var/www/html/override
+      - ./eldor24.pl/themes/eldor24:/var/www/html/themes/eldor24
     depends_on:
       - mariadb
 volumes:
-  mariadb_data:
+  mariadb_data2:
     driver: local
